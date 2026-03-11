@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // 지역변수로 사용하는 경우 -> 콘솔에서 items 입력하면 참조에러 뜸
+      window.onload = function () {
+        // * 배열 아님에 주의! *
+        let items = document.querySelectorAll('.item');
+        console.log(items);
+      };
+
+      //   // 전역변수로 사용하는 경우 -> 콘솔에서 items 입력하면 보임
+      //   // 버그의 원인이 될 수 있음
+      //   window.onload = function () {
+      //     items = document.querySelectorAll('.item');
+      //     console.log(items);
+      //   };
+    </script>
+  </head>
+
+  <body>
+    <ul>
+      <li class="item">item1</li>
+      <li class="item">item2</li>
+      <li class="item">item3</li>
+      <li class="item">item4</li>
+      <li class="item">item5</li>
+    </ul>
+  </body>
+</html>

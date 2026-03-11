@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Script스니펫</title>
+    <script>
+      window.onload = function () {
+        const button = document.getElementById('button');
+        button.onclick = function () {
+
+          // alert('click');
+          
+          alert(`${this}`); // 여기서 this는 event가 발생한 곳을 가리킴
+        };
+      };
+    </script>
+  </head>
+
+  <body>
+    <button id="button">버튼</button>
+  </body>
+</html>

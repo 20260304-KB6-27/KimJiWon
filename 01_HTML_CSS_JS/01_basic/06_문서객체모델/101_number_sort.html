@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      const score = [82, 96, 54, 76, 9, 100, 69, 88];
+      console.log('before = ' + score);
+
+      // sort 메서드가 배열 요소들을 문자열로 형변환함
+      // -> 크기 비교에서 첫 글자가 중요해짐
+      // 왜 문자열로 처리?
+      // 배열 안에 어떤 자료형의 요소가 들어있는지 모름 -> 에러 발생 가능
+      // => 에러 발생하지 않도록 형변환 필요
+      // 어떤 타입이든 변환 가능한 타입이 "문자열"
+      //   score.sort();
+
+      score.sort(function (left, right) {
+        // + 제외한 나머지 연산은 모두 숫자로 해석
+        return left - right;
+      });
+
+      console.log('after = ' + score);
+    </script>
+  </head>
+
+  <body></body>
+</html>
