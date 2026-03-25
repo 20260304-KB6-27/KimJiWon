@@ -8,12 +8,8 @@
   </head>
   <body>
     <div id="app">
-      <div
-        @contextmenu="ctxStop"
-        style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px"
-      >
-        <a href="https://facebook.com" @click="confirmFB">페이스북</a>
-      </div>
+      <input id="a" type="text" :value="name" @input="changeName" /> <br />
+      이름 : <span>{{name}}</span>
     </div>
 
     <script>
@@ -21,16 +17,11 @@
 
       createApp({
         data() {
-          return {};
+          return { name: '' };
         },
         methods: {
-          ctxStop(e) {
-            e.preventDefault();
-          },
-          confirmFB(e) {
-            if (!confirm('페이스북으로 이동할까요?')) {
-              e.preventDefault();
-            }
+          changeName(e) {
+            this.name = e.target.value;
           },
         },
       }).mount('#app');

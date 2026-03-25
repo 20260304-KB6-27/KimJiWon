@@ -8,12 +8,13 @@
   </head>
   <body>
     <div id="app">
-      <div
-        @contextmenu="ctxStop"
-        style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px"
+      <button
+        :style="{backgroundColor, color}"
+        @mouseover.stop="overEvent"
+        @mouseout.stop="outEvent"
       >
-        <a href="https://facebook.com" @click="confirmFB">페이스북</a>
-      </div>
+        테스트
+      </button>
     </div>
 
     <script>
@@ -21,16 +22,19 @@
 
       createApp({
         data() {
-          return {};
+          return {
+            backgroundColor: 'aqua',
+            color: 'black',
+          };
         },
         methods: {
-          ctxStop(e) {
-            e.preventDefault();
+          overEvent() {
+            this.backgroundColor = 'purple';
+            this.color = 'yellow';
           },
-          confirmFB(e) {
-            if (!confirm('페이스북으로 이동할까요?')) {
-              e.preventDefault();
-            }
+          outEvent() {
+            this.backgroundColor = 'aqua';
+            this.color = 'black';
           },
         },
       }).mount('#app');

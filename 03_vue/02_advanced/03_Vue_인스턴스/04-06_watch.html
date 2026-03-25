@@ -49,12 +49,14 @@
 
           // 객체를 deep을 사용해서 감시할 경우 -> newVal, oldVal가 동일한 Proxy 객체를 참조함
           watch(
-            () => ({ ...user }),    // 객체를 복사 
+            // 1. user.value를 복사해서 반환 (참조가 아닌 복사본 전달)
+            () => ({ ...user.value }),
             (newVal, oldVal) => {
               console.log(
                 `기존 사용자 : ${oldVal.age}, ${oldVal.email} -> 변경된 사용자 : ${newVal.age}, ${newVal.email}`,
               );
             },
+            { deep: true }, // 2. 객체 내부의 속성 변경을 감시
           );
 
           return {

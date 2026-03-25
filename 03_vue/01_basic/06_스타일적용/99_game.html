@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>반사 신경 테스트</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      #target-button {
+        padding: 20px 40px;
+        font-size: 20px;
+        margin-top: 20px;
+      }
+      .ready {
+        background-color: plum;
+      }
+      .go {
+        background-color: greenyellow;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h2>반사 신경 테스트 게임</h2>
+
+      <button @click="startGame" :disabled="gameState !== 'idle'">
+        게임 시작
+      </button>
+
+      <button
+        v-show="gameState === 'waiting' || gameState === 'ready'"
+        id="target-button"
+        :class="buttonClass"
+        @click="handleClick"
+      >
+        클릭하세요!
+      </button>
+
+      <p v-if="reactionTime !== null">
+        반응 속도: <strong>{{ reactionTime }}ms</strong>
+      </p>
+
+      <p v-if="tooSoon" style="color: red">
+        ❌ 너무 빨리 클릭했어요! 다시 시도해주세요.
+      </p>
+    </div>
+
+    <script>
+      const { createApp, ref, computed, onBeforeUnmount } = Vue;
+
+      createApp({
+        setup() {
+          const gameState = ref('idle'); // idle | waiting | ready
+          const startTime = ref(null); // 시작시간
+          const reactionTime = ref(null); // 반응시간
+          const tooSoon = ref(false); // 너무 빨리 클릭
+          const timerId = ref(null); // 타이머 ID
+
+          const buttonClass = computed(() => {
+            return gameState.value === 'waiting' ? 'ready' : 'go';
+          });
+
+          const clearGameTimer = () => {
+            if (timerId.value !== null) {
+              clearTimeout(timerId.value);
+              timerId.value = null;
+            }
+          };
+
+          const startGame = () => {
+            // 혹시 남아있는 타이머가 있다면 제거
+            clearGameTimer();
+
+            // 게임상태 초기화
+            gameState.value = 'waiting';
+            reactionTime.value = null;
+            tooSoon.value = false;
+            startTime.value = null;
+
+            // 1~3초 사이
+            // Math.random() 함수는 0과 1 사이의 랜덤 숫자를 반환
+            const delay = Math.floor(Math.random() * 2000) + 1000;
+
+            // delay 만큼 대기후 실행
+            timerId.value = setTimeout(() => {
+              gameState.value = 'ready';
+              startTime.value = performance.now();
+              timerId.value = null;
+            }, delay);
+          };
+
+          const handleClick = () => {
+            // 보라색(대기중)일 때 눌렀다면 실패
+            if (gameState.value === 'waiting') {
+              // 초기화
+              clearGameTimer();
+              tooSoon.value = true;
+              reactionTime.value = null;
+              gameState.value = 'idle';
+              startTime.value = null;
+              return;
+            }
+
+            // 초록색(준비완료)일 때만 반응속도 측정
+            if (gameState.value === 'ready' && startTime.value !== null) {
+              reactionTime.value = Math.floor(
+                performance.now() - startTime.value,
+              );
+
+              // 게임 종료 idle : 대기상태
+              gameState.value = 'idle';
+            }
+          };
+
+          onBeforeUnmount(() => {
+            clearGameTimer();
+          });
+
+          return {
+            gameState,
+            reactionTime,
+            tooSoon,
+            buttonClass,
+            startGame,
+            handleClick,
+          };
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>
