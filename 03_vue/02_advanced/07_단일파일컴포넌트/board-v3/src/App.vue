@@ -18,10 +18,9 @@ Emits
 
 -->
 
-
 <template>
   <div id="app">
-    <h1>📌 게시판 목록 v3</h1>
+    <h1>📌 게시판 목록 v3 (컴포넌트 분리)</h1>
 
     <PostInput @add-post="addPost" />
 
@@ -110,9 +109,9 @@ export default {
       },
     ]);
 
-    // 번호 내림차순 정렬
+    // 번호 오름차순 정렬
     const sortedPosts = computed(() =>
-      [...posts.value].sort((a, b) => b.no - a.no),
+      [...posts.value].sort((a, b) => a.no - b.no),
     );
 
     // 선택된 글 번호 및 수정 관련 데이터

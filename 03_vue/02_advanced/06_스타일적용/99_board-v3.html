@@ -146,10 +146,8 @@
             },
           ]);
 
-          // 항상 no 기준 내림차순 정렬된 게시글 목록 반환 (번호가 큰 최신글이 먼저 보이도록 함)
-          // 만약 번호가 작은 순(1,2,3...)을 원하시면 (b.no - a.no)를 (a.no - b.no)로 변경하세요.
           const sortedPosts = computed(() => {
-            return [...posts.value].sort((a, b) => b.no - a.no);
+            return [...posts.value].sort((a, b) => a.no - b.no);
           });
 
           // 신규 작성용 및 수정용 상태
