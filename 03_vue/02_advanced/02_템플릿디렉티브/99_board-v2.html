@@ -3,36 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue 게시판 목록</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Vue 게시판 토글</title>
   </head>
   <body>
     <div id="app">
       <h1>📌 게시판 목록 v2</h1>
 
-      <!-- 아래의 목록을 완성하세요 -->
       <ul>
-        <template v-for="(value, key, index) in posts" :key="value.no">
-          <li class="post-item">
-            <span>{{ value.no }}. {{ value.title }}</span>
-            <!-- 화살표 눌렀을 때 post 펼치는 이벤트 발생 -->
-            <span @click.stop="makePost(value.no)" class="arrow">
-              {{ selectedPostNo === value.no ? '▲' : '▼'}}
-            </span>
-          </li>
-
-          <!-- 반복문 안에서 각 post 데이터에 접근할 수 있도록 -->
-          <div v-if="selectedPostNo === value.no" class="post-content">
-            <h2>{{ value.title }}</h2>
-            <p>{{ value.content }}</p>
-            <button @click.stop="deletePost">닫기</button>
+        <li
+          v-for="post in sortedPosts"
+          :key="post.no"
+          class="post-item-wrapper"
+        >
+          <div @click="togglePost(post.no)" class="post-item">
+            {{ post.no }}. {{ post.title }}
+            <span class="arrow"
+              >{{ selectedPostNo === post.no ? '▲' : '▼' }}</span
+            >
           </div>
-        </template>
+
+          <div v-if="selectedPostNo === post.no" class="post-content">
+            <div v-else>
+              <h2>{{ post.title }}</h2>
+              <p>{{ post.content }}</p>
+              <button @click="closePost">닫기</button>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
 
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-      const { createApp, ref } = Vue;
+      const { createApp, ref, computed } = Vue;
 
       createApp({
         setup() {
@@ -47,19 +50,19 @@
               no: 2,
               title: '자바스크립트 ES6 문법',
               content:
-                'ES6는 JavaScript의 최신 문법을 포함하며, let/const, 화살표 함수, 구조 분해 할당 등을 제공합니다.',
+                'ES6는 JavaScript의 최신 문법을 포함하며, let/const, 화살표 함수 등을 제공합니다.',
             },
             {
               no: 3,
               title: 'Node.js와 Express',
               content:
-                'Node.js는 서버 측에서 JavaScript를 실행할 수 있도록 하는 런타임이며, Express는 이를 위한 경량 웹 프레임워크입니다.',
+                'Node.js는 서버 측 런타임이며, Express는 웹 프레임워크입니다.',
             },
             {
               no: 4,
               title: 'MongoDB 기본 개념',
               content:
-                'MongoDB는 NoSQL 데이터베이스로 JSON과 유사한 문서 기반 데이터를 저장하고 관리할 수 있습니다.',
+                'MongoDB는 NoSQL 데이터베이스로 JSON과 유사한 문서 기반 데이터를 저장합니다.',
             },
             {
               no: 5,
@@ -99,28 +102,27 @@
             },
           ]);
 
-          // 아래에 화면처럼 동작하도록 구현해보세요
+          const sortedPosts = computed(() => {
+            return [...posts.value].sort((a, b) => a.no - b.no);
+          });
 
+          // 선택된 게시글의 번호를 저장
           const selectedPostNo = ref(null);
 
-          const makePost = (no) => {
-            // 저장된 selectedPostId 와 클릭한 list의 no가 같으면 토글 닫기 / 다르면 열기
-            if (selectedPostNo.value === no) {
-              selectedPostNo.value = null;
-            } else {
-              selectedPostNo.value = no;
-            }
+          const togglePost = (no) => {
+            selectedPostNo.value = selectedPostNo.value === no ? null : no;
           };
 
-          const deletePost = () => {
+          const closePost = () => {
             selectedPostNo.value = null;
           };
 
           return {
             posts,
+            sortedPosts,
             selectedPostNo,
-            makePost,
-            deletePost,
+            togglePost,
+            closePost,
           };
         },
       }).mount('#app');
